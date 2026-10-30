@@ -1,0 +1,514 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Estrategia Solar</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;600;700;800&family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: hero oscuro con campo de paneles generativo → cifras reales → simulador Compra vs PPA → comparativo → tipos de sistema → proyectos → proceso → beneficios → portal de clientes → contacto */
+:root{
+  --paper:#F3F5F1;--paper-2:#E7ECE7;--card:#FFFFFF;--ink:#0F2A31;--ink-2:#4D6268;--line:#D3DCD6;
+  --deep:#0C2B33;--deep-2:#123D48;--on-deep:#EAF2EF;--on-deep-2:#A9C2BF;
+  --sun:#F4A62A;--sun-2:#E5821B;--leaf:#2F8A62;--sky:#3D7FA6;
+  --font-display:"Unbounded","Arial Black",system-ui,sans-serif;
+  --font-body:"Figtree",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --font-mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+  --gut-l:max(16px,env(safe-area-inset-left,0px));--gut-r:max(16px,env(safe-area-inset-right,0px));
+  --ease:cubic-bezier(.2,.8,.2,1);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--paper:#0E1C21;--paper-2:#132930;--card:#16262C;--ink:#E6EFEC;--ink-2:#9DB3B0;--line:#26393F;--leaf:#5CC491;--sky:#7DB6D8;color-scheme:dark}}
+:root[data-theme="dark"]{--paper:#0E1C21;--paper-2:#132930;--card:#16262C;--ink:#E6EFEC;--ink-2:#9DB3B0;--line:#26393F;--leaf:#5CC491;--sky:#7DB6D8;color-scheme:dark}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:76px}
+body{background:var(--paper);color:var(--ink);font-family:var(--font-body);font-size:17px;line-height:1.6;overflow-x:hidden}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:60;background:var(--deep)}
+h1,h2,h3{font-family:var(--font-display);line-height:1.02;letter-spacing:-.02em;margin:0;text-wrap:balance}
+p{margin:0}a{color:inherit}img{display:block;max-width:100%}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--sun);outline-offset:2px}
+.wrap{max-width:1200px;margin:0 auto;padding-left:var(--gut-l);padding-right:var(--gut-r)}
+.eyebrow{font-family:var(--font-mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--sun-2)}
+.mono{font-family:var(--font-mono);font-variant-numeric:tabular-nums}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1.5px solid currentColor;background:transparent;padding:12px 20px;border-radius:999px;font-weight:700;font-size:15px;text-decoration:none;cursor:pointer;transition:transform .15s var(--ease),box-shadow .25s,background .2s}
+.btn:hover{transform:translateY(-2px)}.btn:active{transform:scale(.97)}
+.btn.sun{background:var(--sun);border-color:var(--sun);color:#1B1305}
+.btn.sun:hover{box-shadow:0 10px 30px -10px rgba(244,166,42,.8)}
+.btn.deep{background:var(--deep);border-color:var(--deep);color:var(--on-deep)}
+.arrow{transition:transform .2s var(--ease)}.btn:hover .arrow{transform:translateX(4px)}
+/* foto con respaldo */
+.ph{position:relative;overflow:hidden;background:linear-gradient(135deg,var(--deep-2),var(--deep) 60%);}
+.ph::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(90deg,transparent 0 46px,rgba(255,255,255,.05) 46px 48px),repeating-linear-gradient(0deg,transparent 0 30px,rgba(255,255,255,.05) 30px 32px);transform:skewY(-8deg) scale(1.3)}
+.ph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .8s var(--ease)}
+
+/* header */
+header.top{position:fixed;left:0;right:0;top:env(safe-area-inset-top,0px);z-index:50;color:var(--on-deep);transition:background .3s,box-shadow .3s}
+header.top.solid{background:color-mix(in srgb,var(--deep) 94%,transparent);backdrop-filter:blur(8px);box-shadow:0 1px 0 rgba(255,255,255,.06)}
+header.top .wrap{display:flex;align-items:center;gap:22px;padding-block:14px}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none}
+.brand svg{width:36px;height:36px;flex:none;transition:transform .6s var(--ease)}
+.brand:hover svg{transform:rotate(45deg)}
+.brand b{font-family:var(--font-display);font-weight:700;font-size:16px;letter-spacing:-.01em;display:block;line-height:1}
+.brand small{font-size:11px;opacity:.7}
+nav.main{display:flex;gap:22px;margin-left:auto;font-weight:600;font-size:14.5px}
+nav.main a{text-decoration:none;position:relative}
+nav.main a::after{content:"";position:absolute;left:0;right:0;bottom:-5px;height:2px;background:var(--sun);transform:scaleX(0);transform-origin:left;transition:transform .25s var(--ease)}
+nav.main a:hover::after,nav.main a.on::after{transform:scaleX(1)}
+.portal-btn{padding:9px 16px;font-size:14px}
+@media (max-width:960px){nav.main{display:none}.portal-btn{margin-left:auto}}
+
+/* hero */
+.hero{position:relative;background:var(--deep);color:var(--on-deep);overflow:hidden}
+.hero canvas{position:absolute;inset:0;width:100%;height:100%}
+.hero .bgimg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.85;animation:kb 16s var(--ease) both}
+@keyframes kb{from{transform:scale(1.08)}}
+.hero::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,var(--deep) 22%,rgba(12,43,51,.6) 55%,rgba(12,43,51,.15)),linear-gradient(0deg,var(--deep),transparent 40%)}
+.hero .wrap{position:relative;z-index:1;display:grid;grid-template-columns:1.25fr .75fr;gap:40px;align-items:end;padding-block:150px 80px}
+.hero h1{font-size:clamp(40px,6.4vw,84px);font-weight:800}
+.hero h1 span{color:var(--sun);display:block}
+.hero .lede{max-width:46ch;color:var(--on-deep-2);font-size:19px;margin-top:20px}
+.hero .cta{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px}
+.hero h1,.hero .lede,.hero .cta,.live{animation:rise .9s var(--ease) both}
+.hero .lede{animation-delay:.12s}.hero .cta{animation-delay:.22s}.live{animation-delay:.35s}
+@keyframes rise{from{opacity:0;transform:translateY(18px)}}
+.live{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);backdrop-filter:blur(10px);border-radius:18px;padding:18px;display:grid;gap:12px}
+.live .row{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.live b{font-family:var(--font-mono);font-size:26px;font-weight:500;color:#fff}
+.live small{color:var(--on-deep-2);font-size:12.5px}
+.dot{width:8px;height:8px;border-radius:50%;background:#5CC491;display:inline-block;margin-right:6px;box-shadow:0 0 0 0 rgba(92,196,145,.6);animation:pulse 1.8s infinite}
+@keyframes pulse{70%{box-shadow:0 0 0 10px rgba(92,196,145,0)}100%{box-shadow:0 0 0 0 rgba(92,196,145,0)}}
+.bars{display:flex;align-items:flex-end;gap:4px;height:54px}
+.bars i{flex:1;background:linear-gradient(180deg,var(--sun),var(--sun-2));border-radius:3px 3px 0 0;opacity:.9}
+@media (max-width:900px){.hero .wrap{grid-template-columns:1fr;padding-block:120px 56px}}
+
+.ticker{background:var(--sun);color:#1B1305;overflow:hidden;white-space:nowrap}
+.ticker div{display:inline-flex;gap:38px;padding-block:11px;animation:tick 45s linear infinite;font-weight:700;font-size:14px}
+.ticker span::before{content:"☀";margin-right:38px}
+@keyframes tick{to{transform:translateX(-50%)}}
+
+section.block{padding-block:88px}
+.head{display:flex;justify-content:space-between;align-items:end;gap:24px;flex-wrap:wrap;margin-bottom:32px}
+.head h2{font-size:clamp(30px,4.4vw,52px);font-weight:700}
+.head p{max-width:48ch;color:var(--ink-2)}
+
+/* cifras */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.stat{padding:26px 20px;border-left:1px solid var(--line)}.stat:first-child{border-left:0}
+.stat b{display:block;font-family:var(--font-display);font-size:clamp(28px,3.6vw,44px);font-weight:700;color:var(--deep-2)}
+:root[data-theme="dark"] .stat b{color:var(--sun)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .stat b{color:var(--sun)}}
+.stat span{color:var(--ink-2);font-size:14px}
+@media (max-width:800px){.stats{grid-template-columns:1fr 1fr}.stat:nth-child(3){border-left:0}.stat:nth-child(n+3){border-top:1px solid var(--line)}}
+
+/* simulador */
+.sim{display:grid;grid-template-columns:.9fr 1.1fr;gap:24px;align-items:start}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:24px;box-shadow:0 20px 50px -35px rgba(12,43,51,.5)}
+.field{display:grid;gap:8px;margin-bottom:20px}
+.field label,.lbl{font-weight:700;font-size:14px;display:flex;justify-content:space-between;align-items:baseline}
+.field label output{font-family:var(--font-mono);font-weight:500;font-size:16px;color:var(--sun-2)}
+input[type=range]{width:100%;accent-color:var(--sun-2)}
+.seg{display:flex;background:var(--paper-2);border-radius:999px;padding:4px;gap:4px}
+.seg button{flex:1;border:0;background:transparent;border-radius:999px;padding:8px 10px;font-weight:700;font-size:13.5px;cursor:pointer;color:var(--ink-2);transition:background .2s,color .2s,box-shadow .2s}
+.seg button[aria-pressed="true"]{background:var(--card);color:var(--ink);box-shadow:0 2px 8px rgba(0,0,0,.08)}
+select.inp,input.inp,textarea.inp{width:100%;border:1.5px solid var(--line);background:var(--paper);border-radius:12px;padding:11px 12px;color:var(--ink);font-size:15px}
+.note{font-size:12.5px;color:var(--ink-2)}
+.res{display:grid;gap:16px}
+.sysbox{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.sysbox div{background:var(--paper-2);border-radius:14px;padding:12px}
+.sysbox b{display:block;font-family:var(--font-mono);font-size:20px;font-weight:500}
+.sysbox span{font-size:12px;color:var(--ink-2)}
+.roof{background:var(--deep);border-radius:16px;padding:14px;display:grid;grid-template-columns:repeat(var(--c,10),1fr);gap:3px;min-height:90px;align-content:start}
+.roof i{aspect-ratio:1.7/1;background:linear-gradient(135deg,#2a5d72,#173e4c);border:1px solid #3b7890;border-radius:2px;animation:pop .35s var(--ease) both}
+@keyframes pop{from{transform:scale(.4);opacity:0}}
+.cmp{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.opt{border-radius:18px;padding:18px;border:1.5px solid var(--line);background:var(--card);display:grid;gap:8px;position:relative}
+.opt.ppa{border-color:var(--sun);background:color-mix(in srgb,var(--sun) 7%,var(--card))}
+.opt h3{font-size:17px;font-weight:700}
+.opt .big{font-family:var(--font-mono);font-size:26px;font-weight:500}
+.opt .kv{display:flex;justify-content:space-between;font-size:14px;border-top:1px dashed var(--line);padding-top:6px}
+.opt .kv b{font-family:var(--font-mono);font-weight:500}
+.opt .tag{position:absolute;top:-11px;right:14px;background:var(--sun);color:#1B1305;font-size:11.5px;font-weight:800;padding:3px 10px;border-radius:999px}
+.ahorro{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.ahorro svg{flex:1;min-width:240px;height:auto}
+.ahorro svg text{font-family:var(--font-mono);font-size:10px;fill:var(--ink-2)}
+@media (max-width:980px){.sim{grid-template-columns:1fr}}
+@media (max-width:620px){.cmp{grid-template-columns:1fr}.sysbox{grid-template-columns:1fr 1fr}}
+
+/* comparativo */
+.vs{overflow-x:auto;border-radius:20px;border:1px solid var(--line);background:var(--card)}
+.vs table{width:100%;border-collapse:collapse;min-width:640px}
+.vs th,.vs td{padding:14px 18px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+.vs th{font-family:var(--font-display);font-size:15px;font-weight:700}
+.vs th:nth-child(3){background:color-mix(in srgb,var(--sun) 12%,transparent)}
+.vs td:nth-child(3){background:color-mix(in srgb,var(--sun) 5%,transparent)}
+.vs td:first-child{font-weight:700;color:var(--ink-2);font-size:14px;width:24%}
+.vs tr:last-child td{border-bottom:0}
+
+/* sistemas */
+.sys{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.sc{background:var(--card);border:1px solid var(--line);border-radius:22px;overflow:hidden;display:flex;flex-direction:column;transition:transform .3s var(--ease),box-shadow .3s}
+.sc:hover{transform:translateY(-4px);box-shadow:0 24px 50px -30px rgba(12,43,51,.6)}
+.sc .ph{aspect-ratio:16/10}
+.sc:hover .ph img{transform:scale(1.05)}
+.sc .bd{padding:18px 20px 22px;display:grid;gap:10px}
+.sc h3{font-size:19px;font-weight:700}
+.sc ul{margin:0;padding:0;list-style:none;display:grid;gap:6px;color:var(--ink-2);font-size:15px}
+.sc li::before{content:"✓";color:var(--leaf);font-weight:800;margin-right:8px}
+@media (max-width:900px){.sys{grid-template-columns:1fr}}
+
+/* proyectos */
+.proj{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.pc{position:relative;border-radius:22px;overflow:hidden;min-height:300px;display:flex;align-items:flex-end;color:#fff;isolation:isolate;cursor:pointer;border:0;padding:0;text-align:left}
+.pc .ph{position:absolute;inset:0;z-index:-2}
+.pc::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(0deg,rgba(8,26,31,.92) 15%,rgba(8,26,31,.1) 70%)}
+.pc:hover .ph img{transform:scale(1.06)}
+.pc .in{padding:20px;display:grid;gap:8px;width:100%}
+.pc .loc{font-family:var(--font-mono);font-size:12px;color:var(--sun);letter-spacing:.06em;text-transform:uppercase}
+.pc h3{font-size:19px;font-weight:700}
+.pc .nums{display:flex;gap:16px;font-size:13px;color:#cfe0dc;flex-wrap:wrap}
+.pc .nums b{font-family:var(--font-mono);color:#fff;font-weight:500;font-size:15px}
+.pc.wide{grid-column:span 2}
+@media (max-width:900px){.proj{grid-template-columns:1fr}.pc.wide{grid-column:auto}}
+
+/* proceso */
+.steps{display:grid;grid-template-columns:repeat(9,minmax(150px,1fr));gap:0;overflow-x:auto;padding-bottom:8px;scroll-snap-type:x mandatory}
+.step{scroll-snap-align:start;padding:18px 16px 0;border-top:3px solid var(--line);position:relative;transition:border-color .3s}
+.step::before{content:attr(data-n);position:absolute;top:-17px;left:16px;width:30px;height:30px;border-radius:50%;background:var(--paper);border:3px solid var(--line);display:grid;place-items:center;font-family:var(--font-mono);font-size:12px;font-weight:500;transition:.3s}
+.step:hover,.step.on{border-top-color:var(--sun)}
+.step:hover::before,.step.on::before{background:var(--sun);border-color:var(--sun);color:#1B1305}
+.step b{display:block;font-size:15px;margin-top:6px}
+.step span{font-size:13.5px;color:var(--ink-2)}
+
+/* beneficios */
+.ben{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.bc{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px;display:grid;gap:10px;align-content:start;transition:transform .25s var(--ease),border-color .25s}
+.bc:hover{transform:translateY(-3px);border-color:var(--sun)}
+.bc svg{width:30px;height:30px;color:var(--sun-2)}
+.bc b{font-size:15.5px}
+.bc span{font-size:14px;color:var(--ink-2)}
+@media (max-width:900px){.ben{grid-template-columns:1fr 1fr}}
+
+/* portal */
+.portal{background:var(--deep);color:var(--on-deep);overflow:hidden}
+.portal .wrap{display:grid;grid-template-columns:1fr 1.1fr;gap:48px;align-items:center}
+.portal h2{font-size:clamp(30px,4.4vw,52px);font-weight:700}
+.portal p{color:var(--on-deep-2);margin-top:14px;max-width:50ch}
+.portal ul{list-style:none;padding:0;margin:22px 0 26px;display:grid;gap:10px}
+.portal li{display:flex;gap:10px;align-items:flex-start}
+.portal li::before{content:"";width:20px;height:20px;border-radius:50%;background:var(--sun);flex:none;margin-top:3px;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z'/%3E%3C/svg%3E") center/14px no-repeat,linear-gradient(#000,#000);-webkit-mask-composite:xor;mask-composite:exclude}
+.mock{background:#F5F8F6;color:#0F2A31;border-radius:20px;padding:16px;box-shadow:0 40px 80px -30px rgba(0,0,0,.6);transform:perspective(1200px) rotateY(-8deg) rotateX(3deg);transition:transform .6s var(--ease)}
+.mock:hover{transform:none}
+.mock .mh{display:flex;justify-content:space-between;align-items:center;font-size:13px;margin-bottom:12px}
+.mock .kp{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+.mock .kp div{background:#fff;border-radius:12px;padding:10px;font-size:11.5px;color:#4D6268}
+.mock .kp b{display:block;font-family:var(--font-mono);font-size:17px;color:#0F2A31;font-weight:500}
+.mock .inv{background:#fff;border-radius:12px;padding:10px 12px;display:flex;justify-content:space-between;align-items:center;font-size:13px;margin-top:8px}
+.mock .pay{background:#F4A62A;color:#1B1305;border-radius:999px;padding:5px 12px;font-weight:800;font-size:12px}
+@media (max-width:900px){.portal .wrap{grid-template-columns:1fr}.mock{transform:none}}
+
+/* contacto */
+.contact .wrap{display:grid;grid-template-columns:1fr 1fr;gap:40px}
+.cdata{display:grid;gap:16px;align-content:start}
+.cdata div{border-top:1px solid var(--line);padding-top:10px}
+.cdata b{display:block;font-family:var(--font-mono);font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-2);margin-bottom:2px}
+.cdata span{font-size:17px;overflow-wrap:anywhere}
+.soc{display:flex;gap:10px;flex-wrap:wrap}
+.soc a{border:1.5px solid var(--line);border-radius:999px;padding:6px 14px;text-decoration:none;font-weight:600;font-size:14px;transition:border-color .2s}
+.soc a:hover{border-color:var(--sun)}
+.form{display:grid;gap:12px}
+.err{color:#C2412D;font-size:13px}
+@media (max-width:900px){.contact .wrap{grid-template-columns:1fr}}
+footer{background:var(--deep);color:var(--on-deep-2)}
+footer .wrap{padding-block:26px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font-size:13px}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translate(-50%,20px);opacity:0;background:var(--deep);color:var(--on-deep);padding:12px 18px;border-radius:999px;font-weight:600;font-size:14px;z-index:90;transition:.3s var(--ease);pointer-events:none;border:1px solid rgba(255,255,255,.1)}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+.wa{position:fixed;right:max(18px,env(safe-area-inset-right,0px));bottom:calc(18px + env(safe-area-inset-bottom,0px));z-index:45;width:56px;height:56px;border-radius:50%;background:#25D366;color:#fff;display:grid;place-items:center;box-shadow:0 12px 30px -10px rgba(0,0,0,.4);transition:transform .2s var(--ease)}
+.wa:hover{transform:scale(1.08)}.wa svg{width:28px;height:28px}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}html{scroll-behavior:auto}}
+</style>
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+</head>
+<body>
+
+<header class="top" id="top"><div class="wrap">
+  <a class="brand" href="#inicio" aria-label="Estrategia Solar, inicio">
+    <svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="7" fill="#F4A62A"/><g stroke="#F4A62A" stroke-width="2.6" stroke-linecap="round"><path d="M20 3v5M20 32v5M3 20h5M32 20h5M8 8l3.5 3.5M28.5 28.5 32 32M8 32l3.5-3.5M28.5 11.5 32 8"/></g></svg>
+    <span><b>Estrategia Solar</b><small>El sol a nuestro favor</small></span>
+  </a>
+  <nav class="main" aria-label="Principal"><a href="#simulador">Simulador</a><a href="#modelos">PPA o compra</a><a href="#proyectos">Proyectos</a><a href="#proceso">Proceso</a><a href="#contacto">Contacto</a></nav>
+  <a class="btn sun portal-btn" href="cliente.html">Portal de clientes</a>
+</div></header>
+
+<main id="inicio">
+<section class="hero">
+  <canvas id="field" aria-hidden="true"></canvas>
+  <img class="bgimg" src="img/hero.jpg" alt="" onerror="this.remove()">
+  <div class="wrap">
+    <div>
+      <p class="eyebrow" style="color:var(--sun)">Energía solar · Cobertura nacional</p>
+      <h1>El sol a nuestro favor <span>y a tu alcance</span></h1>
+      <p class="lede">Diseñamos, construimos y operamos sistemas fotovoltaicos. Compra tu sistema o paga solo la energía que genera, sin inversión inicial, con un contrato PPA.</p>
+      <div class="cta"><a class="btn sun" href="#simulador">Simula tu ahorro <span class="arrow">→</span></a><a class="btn" href="#contacto" style="color:var(--on-deep)">Asesoría gratuita</a></div>
+    </div>
+    <aside class="live" aria-label="Generación de ejemplo">
+      <div class="row"><small><span class="dot"></span>Generación hoy · proyectos de referencia</small></div>
+      <div class="row"><b id="liveKwh">0</b><small>kWh</small></div>
+      <div class="bars" id="liveBars"></div>
+      <div class="row"><small>CO₂ evitado hoy</small><span class="mono" id="liveCo2">0 kg</span></div>
+      <small style="font-size:11px;opacity:.7">Cifra estimada a partir de la generación mensual publicada de los 5 proyectos.</small>
+    </aside>
+  </div>
+</section>
+<div class="ticker" aria-hidden="true"><div id="tick"></div></div>
+
+<section class="block" style="padding-block:56px">
+  <div class="wrap"><div class="stats">
+    <div class="stat"><b data-count="125">125</b><span>kWp instalados en proyectos de referencia</span></div>
+    <div class="stat"><b data-count="250">250</b><span>paneles solares en operación</span></div>
+    <div class="stat"><b data-count="16485" data-sep="1">16.485</b><span>kWh generados al mes, aprox.</span></div>
+    <div class="stat"><b>Nacional</b><span>cobertura en todo el país</span></div>
+  </div></div>
+</section>
+
+<section class="block" id="simulador" style="padding-top:20px">
+  <div class="wrap">
+    <div class="head"><div><p class="eyebrow">Simulador</p><h2>¿Cuánto puedes ahorrar?</h2></div><p>Mueve los valores con los de tu factura de energía. Te mostramos el sistema que necesitas y cómo se compara comprarlo frente a pagar solo la energía con PPA.</p></div>
+    <div class="sim">
+      <div class="panel">
+        <div class="field"><span class="lbl">Tipo de cliente</span><div class="seg" role="group" aria-label="Tipo de cliente">
+          <button type="button" data-seg="hogar" aria-pressed="false">Hogar</button><button type="button" data-seg="comercio" aria-pressed="true">Comercio</button><button type="button" data-seg="industria" aria-pressed="false">Industria</button></div></div>
+        <div class="field"><label for="bill">Factura mensual de energía <output id="billO"></output></label><input id="bill" type="range" min="300000" max="40000000" step="100000" value="4500000"></div>
+        <div class="field"><label for="tar">Tarifa por kWh <output id="tarO"></output></label><input id="tar" type="range" min="600" max="1300" step="10" value="950"></div>
+        <div class="field"><label for="city">Ciudad del proyecto</label><select class="inp" id="city"></select></div>
+        <div class="field"><label for="cov">Cobertura solar deseada <output id="covO"></output></label><input id="cov" type="range" min="30" max="100" step="5" value="80"></div>
+        <p class="note">Estimación de referencia con 550 W por panel y un rendimiento del sistema del 80%. La propuesta final sale de la visita técnica.</p>
+      </div>
+      <div class="res">
+        <div class="panel" style="display:grid;gap:14px">
+          <div class="sysbox">
+            <div><b id="rKwp">—</b><span>kWp del sistema</span></div><div><b id="rPan">—</b><span>paneles de 550 W</span></div>
+            <div><b id="rArea">—</b><span>m² de techo</span></div><div><b id="rGen">—</b><span>kWh al mes</span></div></div>
+          <div class="roof" id="roof" aria-label="Paneles en el techo"></div>
+          <p class="note" id="roofNote"></p>
+        </div>
+        <div class="cmp">
+          <div class="opt"><h3>Compra · obra llave en mano</h3><span class="note">Inviertes una vez y el sistema es tuyo</span><span class="big" id="cInv">—</span>
+            <div class="kv"><span>Ahorro mensual</span><b id="cSav">—</b></div><div class="kv"><span>Retorno de la inversión</span><b id="cPay">—</b></div>
+            <div class="kv"><span>Beneficio tributario estimado</span><b id="cTax">—</b></div></div>
+          <div class="opt ppa"><span class="tag">Sin inversión</span><h3>PPA · pagas solo la energía</h3><span class="note">Nosotros invertimos, operamos y mantenemos</span><span class="big" id="pTar">—</span>
+            <div class="kv"><span>Ahorro mensual</span><b id="pSav">—</b></div><div class="kv"><span>Ahorro en 15 años</span><b id="pTot">—</b></div>
+            <div class="kv"><span>Mantenimiento</span><b>Incluido</b></div></div>
+        </div>
+        <div class="panel ahorro"><div style="min-width:180px"><p class="eyebrow">Ahorro acumulado · 15 años</p><p class="note" style="margin-top:4px">Con alza de la energía del 6% anual</p></div><svg id="acc" viewBox="0 0 420 150" role="img" aria-label="Ahorro acumulado"></svg></div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn sun" type="button" id="wantProp">Quiero esta propuesta <span class="arrow">→</span></button><span class="note" style="align-self:center">Te escribimos por WhatsApp con este cálculo.</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="block" id="modelos" style="background:var(--paper-2)">
+  <div class="wrap">
+    <div class="head"><div><p class="eyebrow">Dos formas de trabajar</p><h2>PPA o compra por obra</h2></div><p>Los dos modelos instalan el mismo sistema. Cambia quién invierte, quién opera y cómo pagas.</p></div>
+    <div class="vs"><table><thead><tr><th></th><th>Compra · obra o contrato</th><th>PPA · acuerdo de compra de energía</th></tr></thead><tbody>
+      <tr><td>Inversión inicial</td><td>El cliente paga el sistema, por hitos de obra o con financiación</td><td>Cero. Estrategia Solar invierte en el sistema</td></tr>
+      <tr><td>Qué pagas</td><td>El valor del proyecto según contrato</td><td>Solo los kWh que genera el sistema, a una tarifa menor que la de la red</td></tr>
+      <tr><td>Propiedad</td><td>Del cliente desde la entrega a satisfacción</td><td>De Estrategia Solar durante el contrato; se puede transferir al final</td></tr>
+      <tr><td>Mantenimiento</td><td>Plan de mantenimiento opcional</td><td>Incluido: limpiezas, monitoreo y reparaciones</td></tr>
+      <tr><td>Beneficios tributarios</td><td>Para el cliente que invierte (Ley 1715)</td><td>Los gestiona Estrategia Solar</td></tr>
+      <tr><td>Ideal para</td><td>Empresas con liquidez que quieren el activo</td><td>Comercios e industrias que prefieren conservar su caja</td></tr>
+    </tbody></table></div>
+  </div>
+</section>
+
+<section class="block" id="sistemas">
+  <div class="wrap">
+    <div class="head"><div><p class="eyebrow">Tipos de proyecto</p><h2>Un sistema para cada necesidad</h2></div></div>
+    <div class="sys">
+      <article class="sc"><div class="ph"><img src="img/sis-red.jpg" alt="Sistema solar interconectado sobre cubierta" onerror="this.remove()" loading="lazy"></div><div class="bd"><h3>Interconectado a la red</h3><ul><li>Ahorro en tu factura</li><li>Venta de excedentes</li><li>Independencia de precios convencionales</li></ul></div></article>
+      <article class="sc"><div class="ph"><img src="img/sis-aislado.jpg" alt="Sistema solar aislado con baterías" onerror="this.remove()" loading="lazy"></div><div class="bd"><h3>Aislado de la red</h3><ul><li>Energía donde no llega la red</li><li>Independencia total</li><li>Menor costo a largo plazo</li></ul></div></article>
+      <article class="sc"><div class="ph"><img src="img/sis-hibrido.jpg" alt="Sistema solar híbrido con respaldo" onerror="this.remove()" loading="lazy"></div><div class="bd"><h3>Híbrido</h3><ul><li>Combina dos fuentes de energía</li><li>Respaldo ante cortes</li><li>Menor huella de carbono</li></ul></div></article>
+    </div>
+  </div>
+</section>
+
+<section class="block" id="proyectos" style="padding-top:0">
+  <div class="wrap">
+    <div class="head"><div><p class="eyebrow">Proyectos</p><h2>Energía que ya está funcionando</h2></div><p>Toca un proyecto para simular su caso con nuestro simulador.</p></div>
+    <div class="proj" id="proj"></div>
+  </div>
+</section>
+
+<section class="block" id="proceso" style="background:var(--paper-2)">
+  <div class="wrap">
+    <div class="head"><div><p class="eyebrow">Proceso</p><h2>De la idea a la energía</h2></div><p>Te acompañamos en cada etapa, también en los trámites para obtener los beneficios tributarios.</p></div>
+    <div class="steps" id="steps"></div>
+  </div>
+</section>
+
+<section class="block" id="beneficios">
+  <div class="wrap">
+    <div class="head"><div><p class="eyebrow">Beneficios</p><h2>Por qué pasarte al sol</h2></div></div>
+    <div class="ben" id="ben"></div>
+  </div>
+</section>
+
+<section class="block portal">
+  <div class="wrap">
+    <div>
+      <p class="eyebrow" style="color:var(--sun)">Portal de clientes</p>
+      <h2>Tu proyecto y tus facturas, en un solo lugar</h2>
+      <p>Cada cliente tiene su portal para ver la generación de su sistema, descargar y pagar sus facturas por PSE, firmar documentos y agendar mantenimientos.</p>
+      <ul><li>Facturas por kWh generado (PPA) o por hitos de obra</li><li>Pago en línea por PSE</li><li>Avance de obra, certificación RETIE y acta de entrega</li><li>Limpiezas programadas y soporte</li></ul>
+      <a class="btn sun" href="cliente.html">Entrar al portal <span class="arrow">→</span></a>
+    </div>
+    <div class="mock" aria-hidden="true">
+      <div class="mh"><b>Hotel Magangué Plaza · PPA</b><span style="color:#2F8A62;font-weight:700"><span class="dot"></span>Generando</span></div>
+      <div class="kp"><div><b>2.855</b>kWh este mes</div><div><b>$542.450</b>ahorro del mes</div><div><b>360 kg</b>CO₂ evitado</div></div>
+      <svg viewBox="0 0 300 70" style="width:100%;height:auto;background:#fff;border-radius:12px"><path d="M0 60 C30 40 50 50 75 32 S120 20 150 26 S210 10 240 18 S285 8 300 12 L300 70 L0 70Z" fill="#F4A62A" opacity=".25"/><path d="M0 60 C30 40 50 50 75 32 S120 20 150 26 S210 10 240 18 S285 8 300 12" fill="none" stroke="#E5821B" stroke-width="2"/></svg>
+      <div class="inv"><span><b>Factura oct.</b> · 2.855 kWh</span><span class="mono">$2.169.800</span><span class="pay">Pagar PSE</span></div>
+      <div class="inv"><span><b>Factura sep.</b> · 2.790 kWh</span><span class="mono">$2.120.400</span><span style="color:#2F8A62;font-weight:700;font-size:12px">Pagada</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="block contact" id="contacto">
+  <div class="wrap">
+    <div>
+      <p class="eyebrow">Asesoría gratuita</p><h2 style="font-size:clamp(30px,4.4vw,52px)">Hablemos de tu proyecto</h2>
+      <div class="cdata" style="margin-top:26px">
+        <div><b>WhatsApp y teléfono</b><span>+57 310 879 1868</span></div>
+        <div><b>Correo</b><span>info@estrategiasolar.com</span></div>
+        <div><b>Oficina</b><span>Cra 43A #1A Sur-29, Oficina 711</span></div>
+        <div><b>Horario</b><span>Lunes a viernes, 9:00 a. m. – 7:00 p. m.</span></div>
+        <div class="soc"><a href="https://www.instagram.com/estrategiasolarsas" target="_blank" rel="noopener">Instagram</a><a href="https://www.facebook.com/profile.php?id=61554823206196" target="_blank" rel="noopener">Facebook</a><a href="https://www.linkedin.com/in/estrategia-solar-a477662a9/" target="_blank" rel="noopener">LinkedIn</a></div>
+      </div>
+    </div>
+    <form class="panel form" id="cform" novalidate>
+      <label class="lbl" for="cn">Nombre</label><input class="inp" id="cn" autocomplete="name">
+      <label class="lbl" for="cc">Celular</label><input class="inp" id="cc" inputmode="tel" autocomplete="tel">
+      <label class="lbl" for="ce">Correo electrónico</label><input class="inp" id="ce" type="email" autocomplete="email">
+      <label class="lbl" for="cm">Cuéntanos de tu proyecto</label><textarea class="inp" id="cm" rows="3" placeholder="Tipo de inmueble, ciudad, valor de tu factura…"></textarea>
+      <p class="err" id="cerr" hidden></p>
+      <button class="btn sun" type="submit">Enviar por WhatsApp <span class="arrow">→</span></button>
+      <div id="cres" hidden></div>
+    </form>
+  </div>
+</section>
+</main>
+<footer><div class="wrap"><span>© Estrategia Solar S.A.S. · El sol a nuestro favor</span><span><a href="cliente.html">Portal de clientes</a> · <a href="admin.html">Administración</a></span></div></footer>
+<a class="wa" href="https://wa.me/573108791868" target="_blank" rel="noopener" aria-label="Escribir por WhatsApp"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6a2.7 2.7 0 0 0 1.8-1.2 2.2 2.2 0 0 0 .1-1.3c0-.1-.2-.2-.4-.3z"/></svg></a>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+(function(){
+"use strict";
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const RM=matchMedia("(prefers-reduced-motion:reduce)").matches;
+const WA="573108791868";
+const money=n=>"$"+Math.round(n).toLocaleString("es-CO");
+const mM=n=>n>=1e6?"$"+(n/1e6).toLocaleString("es-CO",{maximumFractionDigits:1})+" M":money(n);
+const fmt=n=>Math.round(n).toLocaleString("es-CO");
+
+/* Campo de paneles generativo */
+const cv=$("#field");
+function drawField(){
+  const b=cv.getBoundingClientRect(),dpr=Math.min(2,devicePixelRatio||1);cv.width=b.width*dpr;cv.height=b.height*dpr;const c=cv.getContext("2d");if(!c)return;c.scale(dpr,dpr);
+  const W=b.width,H=b.height;const g=c.createRadialGradient(W*.82,H*.18,10,W*.82,H*.18,W*.5);g.addColorStop(0,"rgba(244,166,42,.55)");g.addColorStop(.35,"rgba(244,166,42,.12)");g.addColorStop(1,"rgba(244,166,42,0)");
+  c.fillStyle="#0C2B33";c.fillRect(0,0,W,H);c.fillStyle=g;c.fillRect(0,0,W,H);
+  c.beginPath();c.arc(W*.82,H*.18,34,0,7);c.fillStyle="#F4A62A";c.fill();
+  const hor=H*.48;
+  for(let r=0;r<16;r++){const t=r/16,y=hor+Math.pow(t,1.6)*(H-hor)*1.15,h=8+t*46,rowW=W*(.5+t*1.4),n=Math.round(10+t*10),pw=rowW/n,x0=W*.62-rowW/2+t*W*.15;
+    for(let i=0;i<n;i++){const x=x0+i*pw;if(x>W||x+pw<0)continue;const lg=c.createLinearGradient(x,y,x+pw,y+h);lg.addColorStop(0,`rgba(58,120,146,${.35+t*.5})`);lg.addColorStop(1,`rgba(20,58,72,${.4+t*.5})`);
+      c.fillStyle=lg;c.fillRect(x+2,y,pw-4,h);c.strokeStyle=`rgba(140,200,220,${.12+t*.2})`;c.lineWidth=1;c.strokeRect(x+2,y,pw-4,h);
+      c.beginPath();c.moveTo(x+pw/2,y);c.lineTo(x+pw/2,y+h);c.moveTo(x+2,y+h/2);c.lineTo(x+pw-2,y+h/2);c.stroke()}}
+}
+drawField();let rt;addEventListener("resize",()=>{clearTimeout(rt);rt=setTimeout(drawField,150)});
+
+/* Generación en vivo (estimada) */
+const DAYK=16485/30;const bars=$("#liveBars");const hrs=[...Array(24)].map((_,h)=>Math.max(0,Math.sin((h-6)/12*Math.PI)));const sum=hrs.reduce((a,b)=>a+b,0);
+bars.innerHTML=hrs.slice(5,19).map(v=>`<i style="height:${Math.max(4,v*100)}%"></i>`).join("");
+function live(){const now=new Date(),h=now.getHours()+now.getMinutes()/60;let acc=0;for(let k=0;k<24;k++){const f=Math.min(1,Math.max(0,h-k));acc+=hrs[k]*f}
+  const kwh=DAYK*acc/sum;$("#liveKwh").textContent=fmt(kwh);$("#liveCo2").textContent=fmt(kwh*.126)+" kg";
+  $$("#liveBars i").forEach((b,i)=>b.style.opacity=(i+5)<=h?.95:.25)}
+live();setInterval(live,30000);
+
+/* Cinta */
+const TK=["Estudios de prefactibilidad","Diseño","Suministro","Construcción","Mantenimiento","Operación","Beneficios tributarios","Puesta en marcha","Certificación y legalización"];
+$("#tick").innerHTML=[...TK,...TK].map(t=>`<span>${t}</span>`).join("");
+
+/* Header */
+const top=$("#top");const onS=()=>top.classList.toggle("solid",scrollY>40);addEventListener("scroll",onS,{passive:true});onS();
+if("IntersectionObserver" in window){const nav=$$("nav.main a");const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)nav.forEach(a=>a.classList.toggle("on",a.getAttribute("href")==="#"+e.target.id))}),{rootMargin:"-45% 0px -50% 0px"});["simulador","modelos","proyectos","proceso","contacto"].forEach(i=>io.observe(document.getElementById(i)))}
+
+/* Simulador */
+const CITIES=[["Valledupar",5.6],["San Diego, Cesar",5.5],["Barranquilla",5.4],["Santa Marta",5.5],["Cartagena",5.3],["Magangué",5.3],["Sincelejo",5.2],["Montería",5.0],["Bucaramanga",4.8],["Medellín",4.5],["Cali",4.6],["Pereira",4.3],["Bogotá",4.0]];
+$("#city").innerHTML=CITIES.map(([c,h],i)=>`<option value="${i}" ${c==="Medellín"?"selected":""}>${c} · ${h.toLocaleString("es-CO")} h sol/día</option>`).join("");
+let seg="comercio";const PPA_DISC={hogar:.15,comercio:.2,industria:.25},COST_KWP={hogar:4300000,comercio:3700000,industria:3200000};
+function sim(){
+  const bill=+$("#bill").value,tar=+$("#tar").value,cov=+$("#cov").value/100,hsp=CITIES[+$("#city").value][1];
+  $("#billO").textContent=money(bill);$("#tarO").textContent=money(tar)+"/kWh";$("#covO").textContent=Math.round(cov*100)+"%";
+  const kwhM=bill/tar,target=kwhM*cov;const kwp=target/(hsp*30*.8);const pan=Math.max(2,Math.ceil(kwp*1000/550));const realKwp=pan*.55;const gen=realKwp*hsp*30*.8;const area=pan*2.6;
+  $("#rKwp").textContent=realKwp.toLocaleString("es-CO",{maximumFractionDigits:1});$("#rPan").textContent=fmt(pan);$("#rArea").textContent=fmt(area);$("#rGen").textContent=fmt(gen);
+  const cols=Math.min(20,Math.max(6,Math.ceil(Math.sqrt(pan*2))));const show=Math.min(pan,160);const roof=$("#roof");roof.style.setProperty("--c",cols);
+  roof.innerHTML=Array.from({length:show},(_,i)=>`<i style="animation-delay:${Math.min(i,60)*8}ms"></i>`).join("");
+  $("#roofNote").textContent=pan>show?`Mostramos ${show} de ${fmt(pan)} paneles.`:`${fmt(pan)} paneles sobre tu techo, unos ${fmt(area)} m².`;
+  const scale=realKwp>100?.85:realKwp>40?.92:1;const inv=realKwp*COST_KWP[seg]*scale;const sav=gen*tar;const pay=inv/(sav*12)*.82;
+  $("#cInv").textContent=mM(inv);$("#cSav").textContent=money(sav);$("#cPay").textContent=pay.toLocaleString("es-CO",{maximumFractionDigits:1})+" años";
+  $("#cTax").textContent=seg==="hogar"?"No aplica":"Hasta "+mM(inv*.5*.35);
+  const d=PPA_DISC[seg],pt=tar*(1-d),psav=gen*tar*d;$("#pTar").textContent=money(pt)+"/kWh";$("#pSav").textContent=money(psav);
+  let tC=-inv,tP=0,ser=[];for(let y=1;y<=15;y++){const f=Math.pow(1.06,y-1);tC+=sav*12*f*Math.pow(.995,y);tP+=psav*12*f;ser.push([tC,tP])}
+  $("#pTot").textContent=mM(tP);
+  const W=420,H=150,pl=48,pb=20,mn=Math.min(0,...ser.map(s=>s[0])),mx=Math.max(...ser.map(s=>Math.max(s[0],s[1])),1);
+  const x=i=>pl+(W-pl-10)*i/14,y=v=>10+(H-pb-10)*(1-(v-mn)/(mx-mn));
+  const ln=k=>ser.map((s,i)=>`${i?"L":"M"}${x(i).toFixed(1)} ${y(s[k]).toFixed(1)}`).join(" ");
+  $("#acc").innerHTML=`<line x1="${pl}" x2="${W-10}" y1="${y(0)}" y2="${y(0)}" stroke="var(--line)"/><text x="${pl-6}" y="${y(mx)+4}" text-anchor="end">${mM(mx)}</text><text x="${pl-6}" y="${y(0)+4}" text-anchor="end">$0</text>
+   ${mn<0?`<text x="${pl-6}" y="${y(mn)+4}" text-anchor="end">${mM(mn)}</text>`:""}<text x="${x(0)}" y="${H-4}">Año 1</text><text x="${x(14)}" y="${H-4}" text-anchor="end">Año 15</text>
+   <path d="${ln(0)}" fill="none" stroke="var(--deep-2)" stroke-width="2.5"/><path d="${ln(1)}" fill="none" stroke="var(--sun-2)" stroke-width="2.5"/>
+   <circle cx="${x(14)}" cy="${y(ser[14][0])}" r="4" fill="var(--deep-2)"/><circle cx="${x(14)}" cy="${y(ser[14][1])}" r="4" fill="var(--sun-2)"/>
+   <text x="${x(14)-6}" y="${y(ser[14][0])-8}" text-anchor="end" style="fill:var(--ink);font-weight:500">Compra ${mM(ser[14][0])}</text><text x="${x(14)-6}" y="${y(ser[14][1])+16}" text-anchor="end" style="fill:var(--sun-2);font-weight:500">PPA ${mM(ser[14][1])}</text>`;
+  sim.last={bill,tar,city:CITIES[+$("#city").value][0],kwp:realKwp,pan,gen,inv,sav,pt,psav,seg};
+}
+["bill","tar","cov","city"].forEach(id=>$("#"+id).addEventListener("input",sim));
+$$("[data-seg]").forEach(b=>b.addEventListener("click",()=>{seg=b.dataset.seg;$$("[data-seg]").forEach(x=>x.setAttribute("aria-pressed",x===b));
+  const v={hogar:450000,comercio:4500000,industria:18000000}[seg];$("#bill").value=v;sim()}));
+sim();
+$("#wantProp").addEventListener("click",()=>{const s=sim.last;const t=`Hola, quiero una propuesta de energía solar.\nTipo: ${s.seg}\nCiudad: ${s.city}\nFactura mensual: ${money(s.bill)} (${money(s.tar)}/kWh)\nSistema estimado: ${s.kwp.toLocaleString("es-CO",{maximumFractionDigits:1})} kWp · ${s.pan} paneles · ${fmt(s.gen)} kWh/mes\nCompra: ${mM(s.inv)} · ahorro ${money(s.sav)}/mes\nPPA: ${money(s.pt)}/kWh · ahorro ${money(s.psav)}/mes`;
+  const a=document.createElement("a");a.href=`https://wa.me/${WA}?text=${encodeURIComponent(t)}`;a.target="_blank";a.rel="noopener";document.body.appendChild(a);a.click();a.remove();toast("Abrimos WhatsApp con tu simulación")});
+
+/* Proyectos */
+const PR=[["Restaurante Fonda Paisa","San Diego, Cesar",57,105,7484,1],["Hotel Magangué Plaza","Magangué, Bolívar",21,47,2855,2],["Hotel Boutique Casa Rosalía","Valledupar, Cesar",16,30,2139,3],["Almacén Auteco Motocicletas","Sincelejo, Sucre",21,46,2670,4],["Almacén Auteco Magangué","Magangué, Bolívar",10,22,1337,5]];
+$("#proj").innerHTML=PR.map(([n,l,k,p,g,i],j)=>`<button type="button" class="pc ${j===0?"wide":""}" data-p="${j}"><div class="ph"><img src="img/proy-${i}.jpg" alt="${n}" onerror="this.remove()" loading="lazy"></div>
+  <div class="in"><span class="loc">${l}</span><h3>${n}</h3><div class="nums"><span><b>${k}</b> kWp</span><span><b>${p}</b> paneles</span><span><b>${fmt(g)}</b> kWh/mes</span></div></div></button>`).join("");
+$("#proj").addEventListener("click",e=>{const b=e.target.closest("[data-p]");if(!b)return;const [n,l,k,p,g]=PR[+b.dataset.p];
+  const ci=CITIES.findIndex(c=>l.startsWith(c[0].split(",")[0]));if(ci>=0)$("#city").value=ci;$("#cov").value=100;$("#bill").value=Math.round(g*950/100000)*100000;$("#tar").value=950;sim();
+  document.getElementById("simulador").scrollIntoView({behavior:RM?"auto":"smooth"});toast(`Simulación cargada con el caso ${n}`)});
+
+/* Proceso */
+const ST=[["Prefactibilidad","Visita técnica y análisis de consumo"],["Diseño","Ingeniería y propuesta a la medida"],["Suministro","Paneles, inversores y estructura"],["Construcción","Instalación con personal certificado"],["Puesta en marcha","Pruebas y entrada en operación"],["Certificación","RETIE y legalización ante el operador de red"],["Beneficios","Acompañamiento en incentivos tributarios"],["Operación","Monitoreo de la generación"],["Mantenimiento","Limpiezas y revisiones programadas"]];
+$("#steps").innerHTML=ST.map(([a,b],i)=>`<div class="step" data-n="${i+1}"><b>${a}</b><span>${b}</span></div>`).join("");
+if(!RM){let k=0;setInterval(()=>{$$(".step").forEach((s,i)=>s.classList.toggle("on",i<=k));k=(k+1)%(ST.length+2)},900)}
+
+/* Beneficios */
+const IC={leaf:'<path d="M5 19c8 0 14-6 14-14-8 0-14 6-14 14zm0 0 7-7"/>',clock:'<circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/>',wrench:'<path d="M14 6a4 4 0 0 0 5 5l-8 8a2 2 0 0 1-3-3l8-8a4 4 0 0 0-2-2z"/>',bolt:'<path d="M13 3 5 14h6l-1 7 8-11h-6z"/>',down:'<path d="M12 5v14M6 13l6 6 6-6"/>',shield:'<path d="M12 3 5 6v6c0 4 3 7 7 9 4-2 7-5 7-9V6z"/>',home:'<path d="M4 11 12 4l8 7v9H4z"/><path d="M10 20v-6h4v6"/>',sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M5 19l2-2M17 7l2-2"/>'};
+const BN=[["leaf","Energía responsable","Consumo con menor huella ambiental"],["clock","Obra rápida","Tiempos cortos de construcción y operación"],["wrench","Bajo mantenimiento","Costos de mantenimiento reducidos"],["bolt","Venta de excedentes","Lo que no consumes lo entregas a la red"],["down","Ahorro en la factura","Paga menos energía cada mes"],["shield","Protección ante la inflación","La energía sube en promedio 6% al año"],["home","Valorización","Tu inmueble vale más con energía propia"],["sun","Anticípate al Niño","Menos exposición a sobretasas y alzas"]];
+$("#ben").innerHTML=BN.map(([i,a,b])=>`<div class="bc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${IC[i]}</svg><b>${a}</b><span>${b}</span></div>`).join("");
+
+/* Cifras animadas */
+if(!RM&&"IntersectionObserver" in window){const io=new IntersectionObserver(es=>es.forEach(e=>{if(!e.isIntersecting)return;const el=e.target,v=+el.dataset.count,t0=performance.now();
+  const st=t=>{const k=Math.min(1,(t-t0)/900),x=v*(1-Math.pow(1-k,3));el.textContent=fmt(x);if(k<1)requestAnimationFrame(st)};requestAnimationFrame(st);io.unobserve(el)}),{threshold:.6});$$("[data-count]").forEach(el=>io.observe(el))}
+
+/* Contacto */
+$("#cform").addEventListener("submit",e=>{e.preventDefault();const n=$("#cn").value.trim(),c=$("#cc").value.trim(),m=$("#cm").value.trim(),er=$("#cerr");
+  const msg=!n?"Escribe tu nombre.":c.replace(/\D/g,"").length<7?"Escribe un celular válido.":"";er.hidden=!msg;er.textContent=msg;if(msg)return;
+  const t=`Hola, soy ${n}. Celular: ${c}${$("#ce").value?" · Correo: "+$("#ce").value:""}.\n${m||"Quiero una asesoría gratuita en energía solar."}`;
+  $("#cres").hidden=false;$("#cres").innerHTML=`<a class="btn deep" href="https://wa.me/${WA}?text=${encodeURIComponent(t)}" target="_blank" rel="noopener">Abrir WhatsApp con tu mensaje</a>`;toast("Mensaje listo para enviar")});
+
+let tt;function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("show");clearTimeout(tt);tt=setTimeout(()=>t.classList.remove("show"),2400)}
+})();
+</script>
+
+</body>
+</html>
